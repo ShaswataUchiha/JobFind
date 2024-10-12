@@ -2,6 +2,7 @@ import { User } from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import { AsyncHandler } from "../utils/AsyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js"
 import jwt from "jsonwebtoken";
 
 const registerUser = AsyncHandler(async (req, res) => {
@@ -86,6 +87,7 @@ const loginUser = AsyncHandler(async (req, res) => {
   return res
     .status(200)
     .cookie("refreshToken", refreshToken, options)
+    .cookie("accessToken", accessToken, options)
     .json(
       new ApiResponse(200, { user, accessToken }, "User logged in successfully")
     );
@@ -120,15 +122,15 @@ const updateUser = AsyncHandler(async (req, res) => {
     throw new ApiError(404, "User not found");
   }
 
-  (user.fullname = fullname),
-  (user.email = email),
-  (user.phonenumber = phonenumber),
-  (user.bio = bio),
-  (user.profile.skills = skillsArray);
+  if (fullname) user.fullname = fullname;
+  if (email) user.email = email;
+  if (phonenumber) user.phonenumber = phonenumber;
+  if (bio) user.bio = bio;
+  if (skills) (user.profile.skills = skillsArray);
 
   await user.save();
 
-  user = {
+  const updatedUser  = {
     _id: user._id,
     fullname: user.fullname,
     email: user.email,
@@ -139,7 +141,7 @@ const updateUser = AsyncHandler(async (req, res) => {
 
   return res
   .status(200)
-  .json(new ApiResponse(200, { user }, "User updated successfully"));
+  .json(new ApiResponse(200, { user : updateUser }, "User updated successfully"));
 });
 
 export { 
