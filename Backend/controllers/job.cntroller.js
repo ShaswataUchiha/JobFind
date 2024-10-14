@@ -62,14 +62,20 @@ const postJob = AsyncHandler(async (req, res) => {
 
 const getAllJobs = AsyncHandler(async (req, res) => {
   const keyword = req.query.keyword || "";
-  const query = {
-    $or: [
-      { title: { $regex: keyword, $options: "i" } },
-      { description: { $regex: keyword, $options: "i" } },
-    ],
-  };
+  let query = {};
 
-  const jobs = await Job.find(query);
+  if (keyword) {
+    query = {
+      $or: [
+        { title: { $regex: keyword, $options: "i" } },
+        { description: { $regex: keyword, $options: "i" } },
+      ],
+    };
+  }
+
+  const jobs = await Job.find(query).populate({
+    path: "company",
+  }).sort({createdAt: -1});
   if (!jobs) {
     throw new ApiError(404, "No jobs found");
   }
@@ -79,30 +85,42 @@ const getAllJobs = AsyncHandler(async (req, res) => {
     .json(new ApiResponse(200, jobs, "Jobs fetched successfully"));
 });
 
-const getJobsById = AsyncHandler(async(req, res) => {
-    const jobid = req.params.id;
-    const job = await Job.findById(jobid)
+const getJobsById = AsyncHandler(async (req, res) => {
+  const jobid = req.params.id;
+  const job = await Job.findById(jobid);
 
-    if(!job){
-        throw new ApiError(404, "Jobs not found")
-    }
+  if (!job) {
+    throw new ApiError(404, "Jobs not found");
+  }
 
-    return res
-       .status(200)
-       .json(new ApiResponse(200, job, "Job fetched successfully"))
-})
+  return res
+    .status(200)
+    .json(new ApiResponse(200, job, "Job fetched successfully"));
+});
 
-const getAdminPostedJobs = AsyncHandler(async(req, res) => {
-    const adminId = req.id;
-    const jobs = await Job.find({createdBy : adminId})
+const getAdminPostedJobs = AsyncHandler(async (req, res) => {
+  const adminId = req.id;
+  const jobs = await Job.find({ createdBy: adminId }).populate({
+    path: "company",
+    select: "name",
+  }).populate({
+    path: "createdBy",
+    select: "fullname",
+  });
 
-    if(!jobs){
-        throw new ApiError(404, "No jobs found")
-    }
+  if (!jobs) {
+    throw new ApiError(404, "No jobs found");
+  }
 
-    return res
-       .status(200)
-       .json(new ApiResponse(200, jobs, "Jobs that created by admin fetched successfully"))
-})
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        jobs,
+        "Jobs that created by admin fetched successfully"
+      )
+    );
+});
 
-export { postJob, getAllJobs, getJobsById, getAdminPostedJobs};
+export { postJob, getAllJobs, getJobsById, getAdminPostedJobs };
