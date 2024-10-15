@@ -41,7 +41,6 @@ const applicationForJob = AsyncHandler(async (req, res) => {
     .json(
       new ApiResponse(
         200,
-        { application },
         "Application submitted successfully"
       )
     );
