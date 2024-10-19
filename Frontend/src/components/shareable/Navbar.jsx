@@ -3,6 +3,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { LogOut, User2 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -18,9 +19,11 @@ const Navbar = () => {
       <div className="flex items-center justify-between mx-auto max-w-7xl h-16 px-4 md:px-8">
         {/* Logo Section */}
         <div className="flex items-center">
-          <h1 className="text-2xl font-bold text-gray-800">
-            Job<span className="text-[#F83002]">Portal</span>
-          </h1>
+          <Link to="/">
+            <h1 className="text-2xl font-bold text-gray-800">
+              Job<span className="text-[#F83002]">Portal</span>
+            </h1>
+          </Link>
         </div>
 
         {/* Menu Items (Hidden on Mobile) */}
@@ -42,15 +45,19 @@ const Navbar = () => {
         <div className="flex items-center gap-4">
           {!user ? (
             <div className="hidden md:flex items-center gap-4">
-              <Button variant="outline" className="hover:bg-gray-100">
-                Login
-              </Button>
-              <Button
-                className="bg-[#6A38C2] hover:bg-[#5930A3] text-white px-4 py-2 rounded-md transition-colors duration-300"
-                variant="primary"
-              >
-                Sign Up
-              </Button>
+              <Link to="/login">
+                <Button variant="outline" className="hover:bg-gray-100">
+                  Login
+                </Button>
+              </Link>
+              <Link to="/signup">
+                <Button
+                  className="bg-[#6A38C2] hover:bg-[#5930A3] text-white px-4 py-2 rounded-md transition-colors duration-300"
+                  variant="primary"
+                >
+                  Sign Up
+                </Button>
+              </Link>
             </div>
           ) : (
             <Popover>
@@ -135,15 +142,22 @@ const Navbar = () => {
             </li>
             {!user && (
               <div className="flex flex-col gap-2 mt-4">
-                <Button variant="outline" className="w-full hover:bg-gray-100">
-                  Login
-                </Button>
-                <Button
-                  className="bg-[#6A38C2] hover:bg-[#5930A3] text-white w-full rounded-md transition-colors duration-300"
-                  variant="primary"
-                >
-                  Sign Up
-                </Button>
+                <Link to="/login">
+                  <Button
+                    variant="outline"
+                    className="w-full hover:bg-gray-100"
+                  >
+                    Login
+                  </Button>
+                </Link>
+                <Link to="/signup">
+                  <Button
+                    className="bg-[#6A38C2] hover:bg-[#5930A3] text-white w-full rounded-md transition-colors duration-300"
+                    variant="primary"
+                  >
+                    Sign Up
+                  </Button>
+                </Link>
               </div>
             )}
           </ul>
