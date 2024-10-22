@@ -1,11 +1,16 @@
 import React from "react";
 import Navbar from "./shareable/Navbar";
+import HeroSection from "./HeroSection";
+import CategorySection from "./CategorySection";
+import LatestJobs from "./LatestJobs";
 
 const Home = () => {
   return (
     <div>
       <Navbar />
-      <h1 className="text-red-500 text-3xl text-center my-6"> This is Home Page</h1>
+      <HeroSection/>
+      {/* <CategorySection/> */}
+      <LatestJobs/>
     </div>
   );
 };

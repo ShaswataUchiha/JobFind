@@ -8,6 +8,10 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "sonner";
 import { USER_API_ENDPOINT } from "@/utils/constant";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoading } from "@/redux/authSlice";
+import { Button } from "../ui/button";
+import { Loader2 } from "lucide-react";
 
 const Login = () => {
   const [input, setInput] = useState({
@@ -15,35 +19,43 @@ const Login = () => {
     password: "",
     role: "",
   });
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { loading } = useSelector((store) => store.auth);
 
   const changeEventhandeler = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
-  
-  const submitHandeler = async(e) => {
+
+  const submitHandeler = async (e) => {
     e.preventDefault();
     try {
+      dispatch(setLoading(true));
       const res = await axios.post(`${USER_API_ENDPOINT}/login`, input, {
-        headers: {'Content-Type' : "application/json"},
-        withCredentials: true
-      })
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      });
 
-      if(res.data.success){
-        navigate("/")
-        toast(res.data.message)
+      if (res.status === 200 || res.status === 201) {
+        navigate("/");
+        toast.success("Login Success");
       }
     } catch (error) {
-      console.log(error)
-      toast.error(error.response.data.message)
+      console.log(error);
+      toast.error(error.response.data.message);
+    } finally {
+      dispatch(setLoading(false));
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-100 to-white">
       <Navbar />
       <div className="flex items-center justify-center px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto mt-10">
-        <form onSubmit={submitHandeler} className="w-full sm:w-3/4 lg:w-1/2 bg-white shadow-md rounded-xl p-6 sm:p-8 my-10 border-t-4 border-primary">
+        <form
+          onSubmit={submitHandeler}
+          className="w-full sm:w-3/4 lg:w-1/2 bg-white shadow-md rounded-xl p-6 sm:p-8 my-10 border-t-4 border-primary"
+        >
           <h1 className="text-2xl font-extrabold text-gray-800 mb-6 text-center">
             Login to your Account
           </h1>
@@ -105,12 +117,18 @@ const Login = () => {
               </RadioGroup>
             </div>
           </div>
-          <RainbowButton
-            type="submit"
-            className="text-white w-full mt-6 py-3 rounded-lg bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-indigo-500 hover:to-purple-500 transition-all duration-300 ease-in-out"
-          >
-            Login
-          </RainbowButton>
+          {loading ? (
+            <Button className="text-white w-full mt-6 py-3 rounded-lg bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-indigo-500 hover:to-purple-500 transition-all duration-300 ease-in-out">
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            </Button>
+          ) : (
+            <RainbowButton
+              type="submit"
+              className="text-white w-full mt-6 py-3 rounded-lg bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-indigo-500 hover:to-purple-500 transition-all duration-300 ease-in-out"
+            >
+              Login
+            </RainbowButton>
+          )}
           <p className="text-center mt-4 text-sm text-gray-500">
             Don't have an account?{" "}
             <Link to="/signup" className="text-primary hover:underline">
