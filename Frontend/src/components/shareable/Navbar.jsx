@@ -36,7 +36,7 @@ const Navbar = () => {
               <Link to="/jobs">Jobs</Link>
             </li>
             <li className="hover:text-[#F83002] cursor-pointer transition-colors duration-300">
-              Browse
+              <Link to="/browse">Browse</Link>
             </li>
           </ul>
         </div>
