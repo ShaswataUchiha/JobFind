@@ -30,10 +30,10 @@ const Navbar = () => {
         <div className="hidden md:flex items-center gap-8">
           <ul className="flex font-medium items-center gap-8 text-gray-600">
             <li className="hover:text-[#F83002] cursor-pointer transition-colors duration-300">
-              Home
+              <Link to="/">Home</Link>
             </li>
             <li className="hover:text-[#F83002] cursor-pointer transition-colors duration-300">
-              Jobs
+              <Link to="/jobs">Jobs</Link>
             </li>
             <li className="hover:text-[#F83002] cursor-pointer transition-colors duration-300">
               Browse
