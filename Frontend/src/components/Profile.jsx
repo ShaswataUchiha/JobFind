@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "./shareable/Navbar";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
@@ -11,6 +11,7 @@ const skills = ["C++", "Java", "Python"];
 const isResume = true;
 
 const Profile = () => {
+  const  [open, setOpen] = useState(false)
   return (
     <div>
       <Navbar />
@@ -48,7 +49,11 @@ const Profile = () => {
           <h1>Skills</h1>
           <div className="flex items-center gap-1">
             {skills.length != 0 ? (
-              skills.map((item, index) => <Badge key={index}>{item}</Badge>)
+              skills.map((item, index) => (
+                <Badge variant="outline" key={index}>
+                  {item}
+                </Badge>
+              ))
             ) : (
               <span>NA</span>
             )}
@@ -58,8 +63,11 @@ const Profile = () => {
         <div className="grid w-full mx-w-sm items-center gap-1.5">
           <Label className="text-md font-bold">Resume</Label>
           {isResume ? (
-            <a className="text-blue-500 w-full hover:underline cursor-pointer"
-            target="blank" href="https://google.com">
+            <a
+              className="text-blue-500 w-full hover:underline cursor-pointer"
+              target="blank"
+              href="https://google.com"
+            >
               Resume
             </a>
           ) : (
@@ -69,7 +77,7 @@ const Profile = () => {
       </div>
       <div className="max-w-4xl mx-auto bg-white rounded-2xl">
         <h1 className="font-bold text-lg my-5">Applied Jobs</h1>
-          <AppliedJobsTable/>
+        <AppliedJobsTable />
       </div>
     </div>
   );
