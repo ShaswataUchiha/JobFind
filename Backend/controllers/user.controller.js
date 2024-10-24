@@ -86,7 +86,8 @@ const loginUser = AsyncHandler(async (req, res) => {
     .json(
       new ApiResponse(
         200,
-        { user: currentUser, accessToken },
+        {user : currentUser},
+        {token : accessToken},
         "User logged in successfully"
       )
     );

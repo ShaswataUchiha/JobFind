@@ -9,7 +9,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { USER_API_ENDPOINT } from "@/utils/constant";
 import { useDispatch, useSelector } from "react-redux";
-import { setLoading } from "@/redux/authSlice";
+import { setLoading, setUser } from "@/redux/authSlice";
 import { Button } from "../ui/button";
 import { Loader2 } from "lucide-react";
 
@@ -36,7 +36,11 @@ const Login = () => {
         withCredentials: true,
       });
 
+      console.log("Response Data :", res.data)
+
       if (res.status === 200 || res.status === 201) {
+        const userData = res.data.message.user
+        dispatch(setUser(userData))
         navigate("/");
         toast.success("Login Success");
       }

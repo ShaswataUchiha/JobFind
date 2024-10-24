@@ -4,10 +4,12 @@ import { Avatar, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { LogOut, User2 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const user = false;
+  // const user = false;
+  const { user } = useSelector((store) => store.auth);
 
   // Function to toggle the mobile menu
   const toggleMobileMenu = () => {
@@ -88,7 +90,7 @@ const Navbar = () => {
                   <div className="flex items-center gap-2 cursor-pointer text-gray-700 hover:text-[#6A38C2] transition-colors duration-300">
                     <User2 className="w-5 h-5" />
                     <Button variant="link" className="text-sm">
-                      View Profile
+                      <Link to="/profile"> View Profile</Link>
                     </Button>
                   </div>
                   <div className="flex items-center gap-2 cursor-pointer text-gray-700 hover:text-red-500 transition-colors duration-300">
