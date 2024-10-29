@@ -13,6 +13,6 @@ const router = Router()
 router.route("/register").post(singleUpload ,registerUser)
 router.route("/login").post(loginUser)
 router.route("/logout").get(logoutUser)
-router.route("/profile/update").post(isAuthenticated, updateUser)
+router.route("/profile/update").post(isAuthenticated, singleUpload, updateUser)
 
 export default router

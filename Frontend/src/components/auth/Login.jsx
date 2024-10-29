@@ -36,15 +36,17 @@ const Login = () => {
         withCredentials: true,
       });
 
-      console.log("Response Data :", res.data)
-
       if (res.status === 200 || res.status === 201) {
-        const userData = res.data.message.user
-        dispatch(setUser(userData))
+        const userData = res.data.message.user;
+        dispatch(setUser(userData));
         navigate("/");
         toast.success("Login Success");
       }
     } catch (error) {
+      if (error.response || error.response.status === 401) {
+        toast.error("Invalid Credentials");
+        return;
+      }
       console.log(error);
       toast.error(error.response.data.message);
     } finally {
