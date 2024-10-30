@@ -4,6 +4,8 @@ import { AsyncHandler } from "../utils/AsyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
+import getDataUri from "../utils/DataURI.js";
+import cloudinary from "../utils/Cloudinary.js";
 
 const registerUser = AsyncHandler(async (req, res) => {
   const { fullname, email, phonenumber, password, role } = req.body;
@@ -108,6 +110,8 @@ const logoutUser = AsyncHandler(async (req, res) => {
 const updateUser = AsyncHandler(async (req, res) => {
   const { fullname, email, phonenumber, bio, skills } = req.body;
   const file = req.file;
+  const fileUri = getDataUri(file)
+  const cloudResponse = await cloudinary.uploader.upload(fileUri.content)
 
   let skillsArray;
   if (skills) {
@@ -126,6 +130,11 @@ const updateUser = AsyncHandler(async (req, res) => {
   if (phonenumber) user.phonenumber = phonenumber;
   if (bio) user.bio = bio;
   if (skills) user.profile.skills = skillsArray;
+
+  if(cloudResponse){
+    user.profile.resume = cloudResponse.secure_url; // save the clousinary url
+    user.profile.resumeOriginalName = file.originalname // Save the original file name
+  }
 
   await user.save();
 
