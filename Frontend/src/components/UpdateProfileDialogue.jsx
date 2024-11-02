@@ -15,7 +15,7 @@ import store from "@/redux/store";
 import axios from "axios";
 import { USER_API_ENDPOINT } from "@/utils/constant";
 import { toast } from "sonner";
-import { setUser } from "@/redux/authSlice";
+import { setLoading, setUser } from "@/redux/authSlice";
 
 const UpdateProfileDialogue = ({ open, setOpen }) => {
   const [loading, setLoading] = useState(false);
@@ -50,6 +50,7 @@ const UpdateProfileDialogue = ({ open, setOpen }) => {
     if (input.file) formData.append("file", input.file);
 
     try {
+      setLoading(true)
       const res = await axios.post(`${USER_API_ENDPOINT}/profile/update`, formData, {
         headers : {
           'Content-Type': 'multipart/form-data',
@@ -66,6 +67,9 @@ const UpdateProfileDialogue = ({ open, setOpen }) => {
     } catch (error) {
       console.log(error)
       toast.error(error.response.data.message);
+    }
+    finally{
+      setLoading(false)
     }
     setOpen(false);
     console.log(input)

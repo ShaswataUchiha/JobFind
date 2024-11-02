@@ -3,17 +3,40 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { LogOut, User2 } from "lucide-react";
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from 'sonner'
+import { USER_API_ENDPOINT } from "@/utils/constant";
+import axios from "axios";
+import { setUser } from "@/redux/authSlice";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   // const user = false;
   const { user } = useSelector((store) => store.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate()
 
   // Function to toggle the mobile menu
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const logoutHandeler = async () => {
+    try {
+      const res = await axios.get(`${USER_API_ENDPOINT}/logout`, {
+        withCredentials: true,
+      });
+
+      if (res.status === 200) {
+        dispatch(setUser(null));
+        navigate("/");
+        toast.success("Logout Success");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("something went wrong");
+    }
   };
 
   return (
@@ -95,7 +118,7 @@ const Navbar = () => {
                   </div>
                   <div className="flex items-center gap-2 cursor-pointer text-gray-700 hover:text-red-500 transition-colors duration-300">
                     <LogOut className="w-5 h-5" />
-                    <Button variant="link" className="text-sm">
+                    <Button onClick={logoutHandeler} variant="link" className="text-sm">
                       Logout
                     </Button>
                   </div>

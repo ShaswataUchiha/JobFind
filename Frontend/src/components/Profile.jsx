@@ -7,8 +7,10 @@ import { Badge } from "./ui/badge";
 import { Label } from "./ui/label";
 import AppliedJobsTable from "./AppliedJobsTable";
 import UpdateProfileDialogue from "./updateProfileDialogue";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import store from "@/redux/store";
+import { USER_API_ENDPOINT } from "@/utils/constant";
+import { setUser } from "@/redux/authSlice";
 
 const Profile = () => {
   const [open, setOpen] = useState(false);
@@ -82,12 +84,12 @@ const Profile = () => {
           <Label className="text-lg font-medium text-[#6a38c2]">Resume</Label>
           {user?.profile?.resume ? (
             <a
-              href="https://google.com"
+              href={user?.profile?.resume}
               target="_blank"
               rel="noopener noreferrer"
               className="text-[#6a38c2] hover:underline mt-2 block"
             >
-              View Resume
+              {user?.profile?.resumeOriginalName || "View profile..."}
             </a>
           ) : (
             <span className="text-gray-500">Not uploaded</span>

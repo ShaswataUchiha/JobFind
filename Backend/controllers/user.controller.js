@@ -14,6 +14,10 @@ const registerUser = AsyncHandler(async (req, res) => {
     throw new ApiError(400, "Required fileds are missing");
   }
 
+  const file = req.file;
+  const fileUri = getDataUri(file)
+  const cloudRespoonse = await cloudinary.uploader.upload(fileUri.content);
+
   const existedUser = await User.findOne({ email });
 
   if (existedUser) {
@@ -28,6 +32,9 @@ const registerUser = AsyncHandler(async (req, res) => {
     phonenumber,
     password: hashedPassword,
     role,
+    profile : {
+      profilePhoto : cloudRespoonse.secure_url
+    }
   });
 
   return res
