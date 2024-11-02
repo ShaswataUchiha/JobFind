@@ -105,8 +105,8 @@ const Navbar = () => {
                     />
                   </Avatar>
                   <div>
-                    <h4 className="font-medium text-gray-800">Shaswata Roy</h4>
-                    <p className="text-sm text-gray-500">@shadcn</p>
+                    <h4 className="font-medium text-gray-800">{user?.fullname}</h4>
+                    <p className="text-sm text-gray-500">{user?.profile?.bio}</p>
                   </div>
                 </div>
                 <div className="mt-3 space-y-2">
