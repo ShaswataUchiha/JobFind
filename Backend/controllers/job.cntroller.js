@@ -82,7 +82,7 @@ const getAllJobs = AsyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, jobs, "Jobs fetched successfully"));
+    .json(new ApiResponse(200, "Jobs fetched successfully", jobs));
 });
 
 const getJobsById = AsyncHandler(async (req, res) => {
