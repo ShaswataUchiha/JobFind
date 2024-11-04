@@ -95,7 +95,7 @@ const getJobsById = AsyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, job, "Job fetched successfully"));
+    .json(new ApiResponse(200,"Job fetched successfully", job));
 });
 
 const getAdminPostedJobs = AsyncHandler(async (req, res) => {

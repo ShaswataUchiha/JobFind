@@ -5,16 +5,25 @@ import { Avatar, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
 import { useNavigate } from "react-router-dom";
 
-const Job = () => {
+const Job = ({job}) => {
 
   const navigate = useNavigate()
-  const jobId = "iqnqnihfqpqb"
+  // const jobId = "iqnqnihfqpqb"
+
+  const daysAgo = (mongoTime) => {
+    const createdAt = new Date(mongoTime);
+    const todayData = new Date();
+    const diffDays = todayData - createdAt;
+    return Math.floor(diffDays/(1000*24*60*60))
+  }
 
   return (
     <div className="p-6 rounded-xl shadow-lg bg-white border border-gray-200 hover:shadow-2xl transition-shadow duration-300 ease-in-out">
       {/* Header with Time & Bookmark */}
       <div className="flex items-center justify-between mb-4">
-        <p className="text-xs md:text-sm text-gray-500">Posted 2 Days Ago</p>
+        <p className="text-xs md:text-sm text-gray-500">
+          {daysAgo(job?.createdAt) === 0 ? "Today" : `${daysAgo(job?.createdAt)} days ago`}
+        </p>
         <Button
           variant="outline"
           className="rounded-full hover:bg-gray-100"
@@ -34,7 +43,7 @@ const Job = () => {
         </Avatar>
         <div>
           <h1 className="font-semibold text-lg md:text-xl text-gray-800">
-            Company Name
+            {job?.company?.name}
           </h1>
           <p className="text-sm md:text-base text-gray-500">India</p>
         </div>
@@ -43,12 +52,10 @@ const Job = () => {
       {/* Job Title & Description */}
       <div className="mb-4">
         <h1 className="font-bold text-xl md:text-2xl text-gray-800 my-2">
-          Job Title
+        {job?.title}
         </h1>
         <p className="text-sm md:text-base text-gray-600 line-clamp-3">
-          A brief description of the job role goes here. Lorem ipsum dolor sit
-          amet, consectetur adipiscing elit. Integer nec odio. Praesent libero.
-          Sed cursus ante dapibus diam.
+          {job?.description}
         </p>
       </div>
 
@@ -58,25 +65,25 @@ const Job = () => {
           className="text-blue-700 font-semibold px-3 py-1"
           variant="ghost"
         >
-          12 Positions
+          {job?.position} Positions
         </Badge>
         <Badge
           className="text-[#F83002] font-semibold px-3 py-1"
           variant="ghost"
         >
-          1+ Years
+          {job?.experianceLevel} Years
         </Badge>
         <Badge
           className="text-[#7209b7] font-semibold px-3 py-1"
           variant="ghost"
         >
-          18 LPA
+          {job?.salary} LPA
         </Badge>
       </div>
 
       {/* Call-to-Action Buttons */}
       <div className="flex flex-col sm:flex-row gap-3 mt-6">
-        <Button onClick={() => navigate(`/description/${jobId}`)}
+        <Button onClick={() => navigate(`/description/${job?._id}`)}
           variant="outline"
           className="w-full sm:w-auto hover:bg-blue-50 text-blue-700 border-blue-700"
         >
