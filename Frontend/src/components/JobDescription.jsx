@@ -1,21 +1,48 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import Navbar from "./shareable/Navbar";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { JOB_APT_ENDPOINT } from "@/utils/constant";
+import { APPLICATION_APT_ENDPOINT, JOB_APT_ENDPOINT } from "@/utils/constant";
 import { useDispatch, useSelector } from "react-redux";
 import { setSingleJob } from "@/redux/jobSlice";
+import { toast } from "sonner";
 
 const JobDescription = () => {
   const { singleJob } = useSelector((store) => store.job);
-  const {user} = useSelector((store) => store.auth);
+  const { user } = useSelector((store) => store.auth);
   const dispatch = useDispatch();
   const params = useParams();
   const jobId = params.id;
+  // console.log(jobId)
   // console.log(singleJob)
-  const isApplied = singleJob?.applications?.some(application => application.applicant === user?._id) || false;
+  const isInitiallyApplied =
+    singleJob?.applications?.some(
+      (application) => application.applicant === user?._id
+    ) || false;
+  const [isApplied, setIsApplied] = useState(isInitiallyApplied);
+
+  const applyJobHandeler = async () => {
+    try {
+      const res = await axios.get(
+        `${APPLICATION_APT_ENDPOINT}/apply/${jobId}`,
+        { withCredentials: true }
+      );
+      if (res.status === 200) {
+        setIsApplied(true);
+        const updateSingleJob = {
+          ...singleJob,
+          applications: [...singleJob.applications, { applicant: user?._id }],
+        };
+        dispatch(setSingleJob(updateSingleJob));
+        toast.success(res.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
+  };
 
   useEffect(() => {
     const fetchSingleJob = async () => {
@@ -25,6 +52,11 @@ const JobDescription = () => {
         });
         if (res.status === 200 && res.data.statusCode === 200) {
           dispatch(setSingleJob(res.data.data));
+          setIsApplied(
+            res.data.data.applications.some(
+              (application) => application.applicant === user?._id
+            )
+          );
         }
       } catch (error) {
         console.log("Error fetching jobs", error);
@@ -62,6 +94,7 @@ const JobDescription = () => {
           </div>
         </div>
         <Button
+          onClick={isApplied ? null : applyJobHandeler}
           disabled={isApplied}
           className={`rounded-full px-6 py-3 text-white font-semibold transition-all duration-300 ${
             isApplied
