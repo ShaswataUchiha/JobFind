@@ -23,7 +23,7 @@ const registerCompany = AsyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(201, { company }, "Company registered Successfully"));
+    .json(new ApiResponse(201, "Company registered Successfully", {company}));
 });
 
 const getUserCompanies = AsyncHandler(async (req, res) => {
@@ -37,7 +37,7 @@ const getUserCompanies = AsyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(
-      new ApiResponse(200, { companies }, "Companies fetched successfully")
+      new ApiResponse(200, "Companies fetched successfully", { companies })
     );
 });
 
@@ -57,7 +57,7 @@ const getCompanyById = AsyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(
-      new ApiResponse(200, company , "Company fetched by id successfully")
+      new ApiResponse(200, "Company fetched by id successfully", company)
     );
 });
 

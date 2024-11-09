@@ -5,7 +5,7 @@ import { Button } from "../ui/button";
 import { LogOut, User2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { toast } from 'sonner'
+import { toast } from "sonner";
 import { USER_API_ENDPOINT } from "@/utils/constant";
 import axios from "axios";
 import { setUser } from "@/redux/authSlice";
@@ -15,7 +15,7 @@ const Navbar = () => {
   // const user = false;
   const { user } = useSelector((store) => store.auth);
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   // Function to toggle the mobile menu
   const toggleMobileMenu = () => {
@@ -46,7 +46,7 @@ const Navbar = () => {
         <div className="flex items-center">
           <Link to="/">
             <h1 className="text-2xl font-bold text-gray-800">
-              Job<span className="text-[#F83002]">Portal</span>
+              Wrok<span className="text-[#F83002]">Bridge</span>
             </h1>
           </Link>
         </div>
@@ -54,15 +54,28 @@ const Navbar = () => {
         {/* Menu Items (Hidden on Mobile) */}
         <div className="hidden md:flex items-center gap-8">
           <ul className="flex font-medium items-center gap-8 text-gray-600">
-            <li className="hover:text-[#F83002] cursor-pointer transition-colors duration-300">
-              <Link to="/">Home</Link>
-            </li>
-            <li className="hover:text-[#F83002] cursor-pointer transition-colors duration-300">
-              <Link to="/jobs">Jobs</Link>
-            </li>
-            <li className="hover:text-[#F83002] cursor-pointer transition-colors duration-300">
-              <Link to="/browse">Browse</Link>
-            </li>
+            {user && user.role === "recruiter" ? (
+              <>
+                <li className="hover:text-[#F83002] cursor-pointer transition-colors duration-300">
+                  <Link to="/admin/companies">Companies</Link>
+                </li>
+                <li className="hover:text-[#F83002] cursor-pointer transition-colors duration-300">
+                  <Link to="/admin/jobs">Jobs</Link>
+                </li>
+              </>
+            ) : (
+              <>
+                <li className="hover:text-[#F83002] cursor-pointer transition-colors duration-300">
+                  <Link to="/">Home</Link>
+                </li>
+                <li className="hover:text-[#F83002] cursor-pointer transition-colors duration-300">
+                  <Link to="/jobs">Jobs</Link>
+                </li>
+                <li className="hover:text-[#F83002] cursor-pointer transition-colors duration-300">
+                  <Link to="/browse">Browse</Link>
+                </li>
+              </>
+            )}
           </ul>
         </div>
 
@@ -105,20 +118,30 @@ const Navbar = () => {
                     />
                   </Avatar>
                   <div>
-                    <h4 className="font-medium text-gray-800">{user?.fullname}</h4>
-                    <p className="text-sm text-gray-500">{user?.profile?.bio}</p>
+                    <h4 className="font-medium text-gray-800">
+                      {user?.fullname}
+                    </h4>
+                    <p className="text-sm text-gray-500">
+                      {user?.profile?.bio}
+                    </p>
                   </div>
                 </div>
                 <div className="mt-3 space-y-2">
-                  <div className="flex items-center gap-2 cursor-pointer text-gray-700 hover:text-[#6A38C2] transition-colors duration-300">
-                    <User2 className="w-5 h-5" />
-                    <Button variant="link" className="text-sm">
-                      <Link to="/profile"> View Profile</Link>
-                    </Button>
-                  </div>
+                  {user && user.role === "student" && (
+                    <div className="flex items-center gap-2 cursor-pointer text-gray-700 hover:text-[#6A38C2] transition-colors duration-300">
+                      <User2 className="w-5 h-5" />
+                      <Button variant="link" className="text-sm">
+                        <Link to="/profile"> View Profile</Link>
+                      </Button>
+                    </div>
+                  )}
                   <div className="flex items-center gap-2 cursor-pointer text-gray-700 hover:text-red-500 transition-colors duration-300">
                     <LogOut className="w-5 h-5" />
-                    <Button onClick={logoutHandeler} variant="link" className="text-sm">
+                    <Button
+                      onClick={logoutHandeler}
+                      variant="link"
+                      className="text-sm"
+                    >
                       Logout
                     </Button>
                   </div>
