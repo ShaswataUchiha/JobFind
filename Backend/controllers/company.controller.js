@@ -77,7 +77,7 @@ const updateCompany = AsyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, { company }, "Company updated successfully"));
+    .json(new ApiResponse(200, "Company updated successfully", { company }));
 });
 
 export { registerCompany, getUserCompanies, getCompanyById, updateCompany };

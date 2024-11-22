@@ -7,10 +7,13 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { COMPANY_APT_ENDPOINT } from "@/utils/constant";
 import { toast } from "sonner";
+import { useDispatch } from "react-redux";
+import { setSingleComapny } from "@/redux/companySlice";
 
 const CompaniesCreate = () => {
   const navigate = useNavigate();
-  const [companyName, setCompanyName] = useState()
+  const dispatch = useDispatch();
+  const [companyName, setCompanyName] = useState();
 
   const registerNewCompany = async () => {
     try {
@@ -22,14 +25,24 @@ const CompaniesCreate = () => {
           withCredentials: true,
         }
       );
-
-      if(res.statusCode === 201){
-        toast.success(res.message)
-        const companyId = res?.data?.company?._id
-        navigate(`/admin/company/${companyId}`)
+      if (res.data.statusCode === 201) {
+        dispatch(setSingleComapny(res.data.data.company));
+        toast.success("Company registered Successfully");
+        const companyId = res?.data?.data?.company?._id;
+        // console.log(companyId)
+        navigate(`/admin/company/${companyId}`);
       }
     } catch (error) {
       console.log(error);
+
+      if (
+        error.response &&
+        error.response.data.includes("Company already exists")
+      ) {
+        toast.error("This company already exists.");
+      } else {
+        toast.error("Failed to register the company");
+      }
     }
   };
 
@@ -63,7 +76,7 @@ const CompaniesCreate = () => {
           </Button>
           <Button
             className="px-5 py-2 font-semibold bg-purple-700 text-white rounded-xl hover:bg-purple-800 transition-all duration-150 shadow-md transform hover:scale-105"
-            onClink={registerNewCompany}
+            onClick={registerNewCompany}
           >
             Continue
           </Button>
